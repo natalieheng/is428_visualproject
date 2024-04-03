@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <svg width="550" height="300"></svg>
+    <svg width="600" height="300"></svg>
 
     <script>
         // Data
@@ -137,7 +137,19 @@
             .style("text-anchor", "middle")
             .text("Percentage Employed(%)");
 
-        // Add tooltips
+        // Add label for Full-Time    
+        g.append("text")
+            .attr("x", margin.left + 400)
+            .attr("y", height - 207)
+            .text("Full-Time"); 
+        
+        // Add label for Part-Time
+        g.append("text")
+            .attr("x", margin.left + 420)
+            .attr("y", height - 30)
+            .text("Part-Time");
+
+            // Add tooltips
         const tooltip = d3.select("body")
             .append("div")
             .attr("class", "tooltip")
