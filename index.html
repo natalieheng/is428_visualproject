@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+
+        .axis-x text {
+            font: 10px sans-serif;
+        }
+
+        .axis-y text {
+            font: 10px sans-serif;
+        }
+
+        .axis-label {
+            font-size: 12px;
+        }
+
+        .dot, .dot2 {
+            fill: black;
+            stroke: black;
+            stroke-width: 1px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <svg width="800" height="400"></svg>
+
+    <script>
+        // Data
+        const data = [
+            { year: "2012", fullTime: 85.6, partTime: 5.4 },
+            { year: "2013", fullTime: 83.4, partTime: 5.9 },
+            { year: "2014", fullTime: 82.7, partTime: 6.4 },
+            { year: "2015", fullTime: 83.1, partTime: 6.5 },
+            { year: "2016", fullTime: 79.9, partTime: 9.7 },
+            { year: "2017", fullTime: 78.4, partTime: 10.5 },
+            { year: "2018", fullTime: 81.2, partTime: 9.0 },
+            { year: "2019", fullTime: 81.7, partTime: 9.0 },
+            { year: "2020", fullTime: 69.8, partTime: 23.8 },
+            { year: "2021", fullTime: 84.0, partTime: 10.4 },
+            { year: "2022", fullTime: 87.5, partTime: 6.3 }
+        ];
+
+        // SVG setup
+        const svg = d3.select("svg"),
+            margin = { top: 20, right: 20, bottom: 50, left: 50 },
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom,
+            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Set the ranges
+        const x = d3.scaleBand().range([0, width]).padding(0.1);
+        const y = d3.scaleLinear().range([height, 0]);
+
+        // Parse the data
+        data.forEach(d => {
+            d.fullTime = +d.fullTime;
+            d.partTime = +d.partTime;
+        });
+
+        // Scale the range of the data
+        const filteredData = data.filter(d => parseInt(d.year) % 2 === 0);
+        x.domain(filteredData.map(d => d.year));
+        y.domain([0, d3.max(data, d => Math.max(d.fullTime, d.partTime))]);
+
+// Update view function based on brush selection (placeholder)
+function updateView() {
+  const selection = d3.event.selection;
+        
+        // Add the valueline path for Full-Time Permanent
+        g.append("path")
+            .data([data])
+            .attr("class", "line")
+            .attr("d", d3.line()
+                .x(d => x(d.year) + x.bandwidth() / 2)
+                .y(d => y(d.fullTime))
+            );
+
+        // Add the valueline path for Part-Time/Temporary/Freelance
+        g.append("path")
+            .data([data])
+            .attr("class", "line")
+            .style("stroke", "red")
+            .attr("d", d3.line()
+                .x(d => x(d.year) + x.bandwidth() / 2)
+                .y(d => y(d.partTime))
+            );
+
+        // Add the X Axis
+        g.append("g")
+            .attr("class", "axis axis-x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        g.append("g")
+            .attr("class", "axis axis-y")
+            .call(d3.axisLeft(y));
+
+        // Add x-axis label
+        svg.append("text")
+            .attr("class", "axis-label")
+            .attr("transform",
+                "translate(" + (width / 2) + " ," +
+                (height + margin.top + 40) + ")")
+            .style("text-anchor", "middle")
+            .text("Year");
+
+        // Add y-axis label
+        svg.append("text")
+            .attr("class", "axis-label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Percentage (%)");
+
+        // Add tooltips
+        const tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        // Append circles for each data point
+        g.selectAll(".dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", d => x(d.year) + x.bandwidth() / 2)
+            .attr("cy", d => y(d.fullTime))
+            .attr("r", 2)
+            .on("mouseover", function(event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Year: ${d.year}<br>Full-Time: ${d.fullTime}%`)
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        // Append circles for part-time data points
+        g.selectAll(".dot2")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "dot2")
+            .attr("cx", d => x(d.year) + x.bandwidth() / 2)
+            .attr("cy", d => y(d.partTime))
+            .attr("r", 2)
+            .on("mouseover", function(event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Year: ${d.year}<br>Part-Time: ${d.partTime}%`)
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+    </script>
+</body>
+</html>
