@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <svg width="600" height="300"></svg>
+    <svg width="500" height="250"></svg>
 
     <script>
         // Data
@@ -101,7 +101,7 @@
 
         //Add main title
         g.append("text")
-            .attr("x", (width / 2 - 300))
+            .attr("x", (width / 2 - 250))
             .attr("y", 0 - (margin.top / 2))
             //.attr("text-anchor", "middle")
             .style("font-size", "16px")
@@ -139,13 +139,13 @@
 
         // Add label for Full-Time    
         g.append("text")
-            .attr("x", margin.left + 400)
-            .attr("y", height - 207)
+            .attr("x", margin.left + 325)
+            .attr("y", height - 160)
             .text("Full-Time"); 
         
         // Add label for Part-Time
         g.append("text")
-            .attr("x", margin.left + 420)
+            .attr("x", margin.left + 325)
             .attr("y", height - 30)
             .text("Part-Time");
 
