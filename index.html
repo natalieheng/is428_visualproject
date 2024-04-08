@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <svg width="400" height="250"></svg>
+    <svg width="530" height="300"></svg>
 
     <script>
         // Data
@@ -61,7 +61,7 @@
 
         // SVG setup
         const svg = d3.select("svg"),
-            margin = { top: 50, right: 20, bottom: 50, left: 50 },
+            margin = { top: 50, right: 30, bottom: 40, left: 50 },
             width = +svg.attr("width") - margin.left - margin.right,
             height = +svg.attr("height") - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -84,6 +84,7 @@
         g.append("path")
             .data([data])
             .attr("class", "line")
+            .style("stroke", "steelblue")
             .attr("d", d3.line()
                 .x(d => x(d.year) + x.bandwidth() / 2)
                 .y(d => y(d.fullTime))
@@ -99,6 +100,9 @@
                 .y(d => y(d.partTime))
             );
 
+        //Change Font of main title + axes labels
+        svg.append("style").text("text {font-family: Calibri, Arial, sans-serif;}");
+        
         //Add main title
         g.append("text")
             .attr("x", (width / 2 - 200))
@@ -137,23 +141,13 @@
             .style("text-anchor", "middle")
             .text("Percentage Employed(%)");
 
-        // Add label for Full-Time    
-        g.append("text")
-            .attr("x", margin.left + 325)
-            .attr("y", height - 160)
-            .text("Full-Time"); 
-        
-        // Add label for Part-Time
-        g.append("text")
-            .attr("x", margin.left + 325)
-            .attr("y", height - 30)
-            .text("Part-Time");
-
             // Add tooltips
         const tooltip = d3.select("body")
             .append("div")
             .attr("class", "tooltip")
-            .style("opacity", 0);
+            .style("opacity", 0)
+            .style("font-family", "Calibri, Arial, sans-serif")
+            .style("font-size", "14px");
 
         // Append circles for each data point
         g.selectAll(".dot")
@@ -198,6 +192,49 @@
                     .duration(500)
                     .style("opacity", 0);
             });
+
+        //Add legend for Full-Time employment
+        svg.append("rect")
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .style('fill', 'steelblue')
+            .attr("x", 350)
+            .attr("y", 120);
+
+        //Add text for Full-Time employment legend
+        svg.append("text")
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .style('fill', 'black')
+            .attr("x", 365)
+            .attr("y", 130)
+            .text("Full-Time Employment");
+        
+        //Add legend for Part-Time employment
+        svg.append("rect")
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .style('fill', 'red')
+            .attr("x", 350)
+            .attr("y", 135);
+        
+        //Add text for Part-Time employment legend
+        svg.append("text")
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .style('fill', 'black')
+            .attr("x", 365)
+            .attr("y", 145)
+            .text("Part-Time Employment");
+        
 
     </script>
 </body>
