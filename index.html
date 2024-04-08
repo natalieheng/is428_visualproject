@@ -42,7 +42,7 @@
 </head>
 <body>
     <div class = "chart-container">
-    <svg width="420" height="280"></svg></div>
+    <svg width="425" height="280"></svg></div>
 
     <script>
         // Data
@@ -108,7 +108,7 @@
         
         //Add main title
         g.append("text")
-            .attr("x", (width / 2 - 210))
+            .attr("x", (width / 2 - 220))
             .attr("y", -15 - (margin.top / 2))
             //.attr("text-anchor", "middle")
             .style("font-size", "20px")
@@ -139,7 +139,7 @@
             .attr("class", "axis-label")
             .attr("transform", "rotate(-90)")
             .attr("y", 0)
-            .attr("x", 0 - (height / 2 + 50))
+            .attr("x", 0 - (height / 2 + 60))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("Percentage Employed(%)");
